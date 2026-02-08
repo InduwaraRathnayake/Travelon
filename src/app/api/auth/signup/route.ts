@@ -17,8 +17,8 @@ export async function POST(request: Request) {
     await adminDB.collection('users').doc(uid).set({
       ...profileData,
       role: 'organizer', // Set role explicitly
-      phoneNumberVerified: false,
-      subscriptionStatus: 'inactive',
+      phoneNumberVerified: true, //for testing purposes, set to true by default. In production, this should be set based on actual verification status
+      subscriptionStatus: 'subscribed', // Default subscription status should be 'Inactive' unless verified otherwise
       updatedAt: new Date().toISOString()
     });
     

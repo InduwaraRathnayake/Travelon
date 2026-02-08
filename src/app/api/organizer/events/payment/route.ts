@@ -65,7 +65,8 @@ export async function POST(request: Request) {
           phoneNumber: userData?.phoneNumber,
         });
 
-        const subscriberId = userData?.maskedSubscriberId;
+        const subscriberId = userDoc.id;
+        // const subscriberId = userData?.maskedSubscriberId;
 
         if (!subscriberId) {
           console.log(
@@ -108,44 +109,52 @@ export async function POST(request: Request) {
           `[Event Payment] Making mSpace API call with externalTrxId: ${externalTrxId} and subscriberId: ${subscriberId}`
         );
 
-        // Make request to mSpace
-        const mspaceResponse = await fetch(
-          "https://api.mspace.lk/caas/direct/debit",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-              applicationId: process.env.MSPACE_APP_ID,
-              password: process.env.MSPACE_PASSWORD,
-              externalTrxId,
-              subscriberId,
-              paymentInstrumentName: "Mobile Account",
-              amount,
-              currency,
-            }),
-          }
-        );
-
-        if (!mspaceResponse.ok) {
-          const errorText = await mspaceResponse.text();
-          console.error(
-            `[Event Payment] mSpace API error: ${mspaceResponse.status}`,
-            errorText
-          );
-
-          return NextResponse.json(
-            {
-              success: false,
-              statusCode: "E1003",
-              statusDetail: `mSpace API error: ${mspaceResponse.status}`,
-            },
-            { status: 500 }
-          );
+        // Create a dummy response for testing without calling mSpace API
+        const mspaceResponse = {
+          ok: true,
+          statusCode: "S1000",
+          statusDetail: "Success",
+          internalTrxId: "INT-" + externalTrxId,
+          timeStamp: new Date().toISOString(),
         }
+        // const mspaceResponse = await fetch(
+        //   "https://api.mspace.lk/caas/direct/debit",
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json;charset=utf-8",
+        //     },
+        //     body: JSON.stringify({
+        //       applicationId: process.env.MSPACE_APP_ID,
+        //       password: process.env.MSPACE_PASSWORD,
+        //       externalTrxId,
+        //       subscriberId,
+        //       paymentInstrumentName: "Mobile Account",
+        //       amount,
+        //       currency,
+        //     }),
+        //   }
+        // );
 
-        const mspaceData = await mspaceResponse.json();
+        // if (!mspaceResponse.ok) {
+        //   const errorText = await mspaceResponse.text();
+        //   console.error(
+        //     `[Event Payment] mSpace API error: ${mspaceResponse.status}`,
+        //     errorText
+        //   );
+
+        //   return NextResponse.json(
+        //     {
+        //       success: false,
+        //       statusCode: "E1003",
+        //       statusDetail: `mSpace API error: ${mspaceResponse.status}`,
+        //     },
+        //     { status: 500 }
+        //   );
+        // }
+
+        const mspaceData = mspaceResponse;
+        // const mspaceData = await mspaceResponse.json();
         console.log(
           "[Event Payment] mSpace Response:",
           JSON.stringify(mspaceData, null, 2)
@@ -171,6 +180,26 @@ export async function POST(request: Request) {
           externalTrxId,
           timeStamp: mspaceData.timeStamp,
         });
+        // // Update the same document with the response data
+        // await paymentDocRef.update({
+        //   statusCode: mspaceData.statusCode,
+        //   statusDetail: mspaceData.statusDetail,
+        //   internalTrxId: mspaceData.internalTrxId,
+        //   timeStamp: mspaceData.timeStamp,
+        //   updatedAt: new Date().toISOString(),
+        //   mspaceResponse: mspaceData,
+        //   // Update status based on response
+        //   status: mspaceData.statusCode === "S1000" ? "success" : "failed",
+        // });
+
+        // // Return response to client
+        // return NextResponse.json({
+        //   success: true,
+        //   statusCode: mspaceData.statusCode,
+        //   statusDetail: mspaceData.statusDetail,
+        //   externalTrxId,
+        //   timeStamp: mspaceData.timeStamp,
+        // });
       } catch (userError) {
         console.error("[Event Payment] Error fetching user:", userError);
         return NextResponse.json(
