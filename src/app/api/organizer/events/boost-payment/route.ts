@@ -94,13 +94,14 @@ export async function POST(request: Request) {
         }
 
         const userData = userDoc.data();
-        console.log(`[Event Boost Payment] Found user data:`, {
-          id: userDoc.id,
-          hasSubscriberId: !!userData?.maskedSubscriberId,
-          phoneNumber: userData?.phoneNumber,
-        });
+        // console.log(`[Event Boost Payment] Found user data:`, {
+        //   id: userDoc.id,
+        //   hasSubscriberId: !!userData?.maskedSubscriberId,
+        //   phoneNumber: userData?.phoneNumber,
+        // });
 
-        const subscriberId = userData?.maskedSubscriberId;
+        const subscriberId = userDoc.id;
+        // const subscriberId = userData?.maskedSubscriberId;
 
         if (!subscriberId) {
           console.log(
@@ -145,44 +146,51 @@ export async function POST(request: Request) {
           `[Event Boost Payment] Making mSpace API call with externalTrxId: ${externalTrxId} and subscriberId: ${subscriberId}`
         );
 
-        // Make request to mSpace
-        const mspaceResponse = await fetch(
-          "https://api.mspace.lk/caas/direct/debit",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-              applicationId: process.env.MSPACE_APP_ID,
-              password: process.env.MSPACE_PASSWORD,
-              externalTrxId,
-              subscriberId,
-              paymentInstrumentName: "Mobile Account",
-              amount,
-              currency,
-            }),
-          }
-        );
-
-        if (!mspaceResponse.ok) {
-          const errorText = await mspaceResponse.text();
-          console.error(
-            `[Event Boost Payment] mSpace API error: ${mspaceResponse.status}`,
-            errorText
-          );
-
-          return NextResponse.json(
-            {
-              success: false,
-              statusCode: "E1003",
-              statusDetail: `mSpace API error: ${mspaceResponse.status}`,
-            },
-            { status: 500 }
-          );
+        // Make dummy response for testing
+        const mspaceResponse = {
+          ok: true,
+          statusCode: "S1000",
+          statusDetail: "Payment successful",
+          internalTrxId: "INT-" + externalTrxId,
+          timeStamp: new Date().toISOString(),
         }
+        // const mspaceResponse = await fetch(
+        //   "https://api.mspace.lk/caas/direct/debit",
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json;charset=utf-8",
+        //     },
+        //     body: JSON.stringify({
+        //       applicationId: process.env.MSPACE_APP_ID,
+        //       password: process.env.MSPACE_PASSWORD,
+        //       externalTrxId,
+        //       subscriberId,
+        //       paymentInstrumentName: "Mobile Account",
+        //       amount,
+        //       currency,
+        //     }),
+        //   }
+        // );
 
-        const mspaceData = await mspaceResponse.json();
+        // if (!mspaceResponse.ok) {
+        //   const errorText = await mspaceResponse.text();
+        //   console.error(
+        //     `[Event Boost Payment] mSpace API error: ${mspaceResponse.status}`,
+        //     errorText
+        //   );
+
+        //   return NextResponse.json(
+        //     {
+        //       success: false,
+        //       statusCode: "E1003",
+        //       statusDetail: `mSpace API error: ${mspaceResponse.status}`,
+        //     },
+        //     { status: 500 }
+        //   );
+        // }
+
+        const mspaceData = mspaceResponse
         console.log(
           "[Event Boost Payment] mSpace Response:",
           JSON.stringify(mspaceData, null, 2)

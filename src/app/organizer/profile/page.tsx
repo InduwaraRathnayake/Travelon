@@ -491,8 +491,9 @@ const ProfilePage = () => {
                           : "text-gray-600"
                       }`}
                     >
-                      {profile.subscriptionStatus.charAt(0).toUpperCase() +
-                        profile.subscriptionStatus.slice(1)}
+                      {/* {profile.subscriptionStatus.charAt(0).toUpperCase() +
+                        profile.subscriptionStatus.slice(1)} */}
+                      {profile.subscriptionStatus === "subscribed" ? "Active" : "Inactive"}
                     </span>
                   </div>
                 )}
@@ -527,7 +528,7 @@ const ProfilePage = () => {
                         <p className="text-sm text-gray-500 mr-2">
                           Phone Number
                         </p>
-                        {profile.phoneNumberVerified ? (
+                        {/* {profile.phoneNumberVerified ? (
                           <span className="inline-flex items-center bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded-full">
                             <CheckCircle size={12} className="mr-1" />
                             Verified
@@ -537,10 +538,10 @@ const ProfilePage = () => {
                             <XCircle size={12} className="mr-1" />
                             Not Verified
                           </span>
-                        )}
+                        )} */}
                       </div>
 
-                      {!profile.phoneNumberVerified && (
+                      {/* {!profile.phoneNumberVerified && (
                         <button
                           onClick={() => setShowVerifyModal(true)}
                           className="text-xs bg-black text-white px-2 py-1 rounded hover:bg-gray-800 transition-colors"
@@ -548,7 +549,7 @@ const ProfilePage = () => {
                         >
                           {verifying ? "Verifying..." : "Verify Now"}
                         </button>
-                      )}
+                      )} */}
                     </div>
                     <p className="text-gray-800">{profile.phoneNumber}</p>
                   </div>
