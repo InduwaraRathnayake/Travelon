@@ -61,7 +61,7 @@ const PaymentsPage: React.FC = () => {
 
   // Sort and filter payments
   const sortedPayments = payments.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
   const filteredPayments = sortedPayments.filter((payment) => {
     if (filterStatus === "all") return true;
@@ -75,7 +75,7 @@ const PaymentsPage: React.FC = () => {
 
   // Get ongoing payments
   const ongoingPayments = sortedPayments.filter(
-    (p) => p.paymentStatus === "Ongoing"
+    (p) => p.paymentStatus === "Ongoing",
   );
 
   // Display loading state
@@ -89,7 +89,7 @@ const PaymentsPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0">
+    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-0">
       {/* Bank details notification */}
       {showBankNotification && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 relative">
@@ -128,14 +128,15 @@ const PaymentsPage: React.FC = () => {
       )}
 
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-          <Calendar size={28} className="text-black" /> Payments
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-2">
+          <Calendar size={20} className="text-black sm:hidden" />
+          <Calendar size={28} className="text-black hidden sm:block" /> Payments
         </h1>
       </div>
 
-      {/* Filter dropdown and Request Payment button on same row */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-4 bg-white rounded-lg shadow border border-gray-200 px-4 py-2 w-auto">
+      {/* Filter dropdown and Request Payment button responsive layout */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 bg-white rounded-lg shadow border border-gray-200 px-3 sm:px-4 py-2 w-full sm:w-auto">
           <label
             htmlFor="status-filter"
             className="text-sm font-medium text-black"
@@ -146,7 +147,7 @@ const PaymentsPage: React.FC = () => {
             id="status-filter"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-black focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+            className="border border-gray-300 rounded-lg px-2 sm:px-3 py-2 bg-white text-black focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none text-sm"
           >
             <option value="all">All</option>
             <option value="completed">Completed</option>
@@ -155,7 +156,7 @@ const PaymentsPage: React.FC = () => {
           </select>
         </div>
         <button
-          className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+          className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none text-sm sm:text-base whitespace-nowrap"
           onClick={() => setShowModal(true)}
         >
           Request Payment
@@ -171,8 +172,8 @@ const PaymentsPage: React.FC = () => {
             backdropFilter: "blur(8px)",
           }}
         >
-          <div className="bg-white/80 rounded-2xl shadow-2xl p-8 min-w-[340px] w-full max-w-md border border-gray-200">
-            <h2 className="text-xl font-bold mb-6 text-gray-900">
+          <div className="bg-white/80 rounded-2xl shadow-2xl p-4 sm:p-8 min-w-[300px] w-full max-w-md mx-4 sm:mx-0 border border-gray-200">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-gray-900">
               Request Payment
             </h2>
             <label
@@ -185,7 +186,7 @@ const PaymentsPage: React.FC = () => {
               id="ongoing-select"
               value={selectedOngoing}
               onChange={(e) => setSelectedOngoing(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 w-full bg-white text-gray-900 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none mb-6"
+              className="border border-gray-300 rounded-lg px-2 sm:px-3 py-2 w-full bg-white text-gray-900 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none mb-4 sm:mb-6 text-sm"
             >
               <option value="">Select...</option>
               {ongoingPayments.map((p, idx) => (
@@ -196,15 +197,15 @@ const PaymentsPage: React.FC = () => {
                 </option>
               ))}
             </select>
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
               <button
-                className="border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-900 font-semibold hover:bg-gray-50 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+                className="border border-gray-300 rounded-lg px-3 sm:px-4 py-2 bg-white text-gray-900 font-semibold hover:bg-gray-50 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none text-sm sm:text-base"
                 onClick={() => setShowModal(false)}
               >
                 Cancel
               </button>
               <button
-                className="border border-gray-300 rounded-lg px-4 py-2 bg-black text-white font-semibold hover:bg-gray-800 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+                className="border border-gray-300 rounded-lg px-3 sm:px-4 py-2 bg-black text-white font-semibold hover:bg-gray-800 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none text-sm sm:text-base"
                 disabled={!selectedOngoing}
                 onClick={async () => {
                   try {
@@ -226,7 +227,7 @@ const PaymentsPage: React.FC = () => {
                     if (fetchRes.ok) {
                       const data = await fetchRes.json();
                       setPayments(
-                        Array.isArray(data.payments) ? data.payments : []
+                        Array.isArray(data.payments) ? data.payments : [],
                       );
                     }
 
@@ -247,107 +248,188 @@ const PaymentsPage: React.FC = () => {
 
       {/* Display empty state if no payments are available */}
       {!loading && filteredPayments.length === 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-          <Calendar size={48} className="mx-auto text-gray-400 mb-4" />
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-12 text-center">
+          <Calendar
+            size={32}
+            className="mx-auto text-gray-400 mb-4 sm:hidden"
+          />
+          <Calendar
+            size={48}
+            className="mx-auto text-gray-400 mb-4 hidden sm:block"
+          />
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
             No payments found
           </h3>
-          <p className="text-gray-500 mb-6">
+          <p className="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">
             {filterStatus === "all"
               ? "You don't have any payments yet."
               : `You don't have any ${filterStatus} payments.`}
           </p>
           <Link
             href="/organizer/create-event"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md bg-black text-white hover:bg-gray-800 transition-all"
+            className="inline-flex items-center px-3 sm:px-4 py-2 border border-gray-300 rounded-md bg-black text-white hover:bg-gray-800 transition-all text-sm sm:text-base"
           >
             Create an event to get started
           </Link>
         </div>
       )}
 
-      {/* Display payment table if there are payments */}
+      {/* Display payment table/cards if there are payments */}
       {!loading && filteredPayments.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <table className="min-w-full">
-            <thead>
-              <tr className="bg-gray-100 text-gray-700 text-sm">
-                <th className="py-3 px-4 text-left font-semibold">Photo</th>
-                <th className="py-3 px-4 text-left font-semibold">
-                  Event Name
-                </th>
-                <th className="py-3 px-4 text-center font-semibold">Date</th>
-                <th className="py-3 px-4 text-center font-semibold">
-                  Participants
-                </th>
-                <th className="py-3 px-4 text-center font-semibold">
-                  Ticket Price ($)
-                </th>
-                <th className="py-3 px-4 text-center font-semibold">Status</th>
-                <th className="py-3 px-4 text-center font-semibold">
-                  Total Payment ($)
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredPayments.map((payment, idx) => (
-                <tr
-                  key={idx}
-                  className="border-b last:border-b-0 hover:bg-gray-50 transition-colors"
-                >
-                  <td className="py-3 px-4">
-                    <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
-                      <Image
-                        src={
-                          payment.images && payment.images.length > 0
-                            ? payment.images[0]
-                            : "/SriLanks.webp"
-                        }
-                        alt={payment.eventName}
-                        width={48}
-                        height={48}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 flex items-center gap-2">
-                    <Users size={18} className="text-gray-400" />
-                    <span className="font-medium text-gray-800">
-                      {payment.eventName}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center text-gray-700">
-                    {formatDate(payment.createdAt)}
-                  </td>
-                  <td className="py-3 px-4 text-center text-gray-700 font-semibold">
-                    {payment.participantCount}
-                  </td>
-                  <td className="py-3 px-4 text-center text-gray-700">
-                    {payment.ticketPrice}
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border text-xs font-medium ${
-                        statusStyles[payment.paymentStatus]
-                      }`}
-                    >
-                      {payment.paymentStatus === "Completed" ? (
-                        <CheckCircle size={14} className="text-green-500" />
-                      ) : payment.paymentStatus === "Pending" ? (
-                        <XCircle size={14} className="text-yellow-500" />
-                      ) : (
-                        <span className="w-3 h-3 rounded-full bg-blue-400 inline-block mr-1"></span>
-                      )}
-                      {payment.paymentStatus}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center font-bold text-black">
-                    {payment.ticketPrice * payment.participantCount}
-                  </td>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+          {/* Desktop Table View */}
+          <div className="hidden lg:block">
+            <table className="min-w-full">
+              <thead>
+                <tr className="bg-gray-100 text-gray-700 text-sm">
+                  <th className="py-3 px-4 text-left font-semibold">Photo</th>
+                  <th className="py-3 px-4 text-left font-semibold">
+                    Event Name
+                  </th>
+                  <th className="py-3 px-4 text-center font-semibold">Date</th>
+                  <th className="py-3 px-4 text-center font-semibold">
+                    Participants
+                  </th>
+                  <th className="py-3 px-4 text-center font-semibold">
+                    Ticket Price ($)
+                  </th>
+                  <th className="py-3 px-4 text-center font-semibold">
+                    Status
+                  </th>
+                  <th className="py-3 px-4 text-center font-semibold">
+                    Total Payment ($)
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredPayments.map((payment, idx) => (
+                  <tr
+                    key={idx}
+                    className="border-b last:border-b-0 hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="py-3 px-4">
+                      <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+                        <Image
+                          src={
+                            payment.images && payment.images.length > 0
+                              ? payment.images[0]
+                              : "/SriLanks.webp"
+                          }
+                          alt={payment.eventName}
+                          width={48}
+                          height={48}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 flex items-center gap-2">
+                      <Users size={18} className="text-gray-400" />
+                      <span className="font-medium text-gray-800">
+                        {payment.eventName}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-700">
+                      {formatDate(payment.createdAt)}
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-700 font-semibold">
+                      {payment.participantCount}
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-700">
+                      {payment.ticketPrice}
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <span
+                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border text-xs font-medium ${
+                          statusStyles[payment.paymentStatus]
+                        }`}
+                      >
+                        {payment.paymentStatus === "Completed" ? (
+                          <CheckCircle size={14} className="text-green-500" />
+                        ) : payment.paymentStatus === "Pending" ? (
+                          <XCircle size={14} className="text-yellow-500" />
+                        ) : (
+                          <span className="w-3 h-3 rounded-full bg-blue-400 inline-block mr-1"></span>
+                        )}
+                        {payment.paymentStatus}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center font-bold text-black">
+                      {payment.ticketPrice * payment.participantCount}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="block lg:hidden space-y-4">
+            {filteredPayments.map((payment, idx) => (
+              <div
+                key={idx}
+                className="border border-gray-200 rounded-lg p-4 space-y-3"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+                    <Image
+                      src={
+                        payment.images && payment.images.length > 0
+                          ? payment.images[0]
+                          : "/SriLanks.webp"
+                      }
+                      alt={payment.eventName}
+                      width={48}
+                      height={48}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Users size={16} className="text-gray-400" />
+                      <span className="font-medium text-gray-800 text-sm">
+                        {payment.eventName}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {formatDate(payment.createdAt)}
+                    </div>
+                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-xs font-medium ${
+                      statusStyles[payment.paymentStatus]
+                    }`}
+                  >
+                    {payment.paymentStatus === "Completed" ? (
+                      <CheckCircle size={12} className="text-green-500" />
+                    ) : payment.paymentStatus === "Pending" ? (
+                      <XCircle size={12} className="text-yellow-500" />
+                    ) : (
+                      <span className="w-2 h-2 rounded-full bg-blue-400 inline-block mr-1"></span>
+                    )}
+                    {payment.paymentStatus}
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="text-gray-500 text-xs">Participants</div>
+                    <div className="font-semibold">
+                      {payment.participantCount}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500 text-xs">Ticket Price</div>
+                    <div>${payment.ticketPrice}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500 text-xs">Total</div>
+                    <div className="font-bold">
+                      ${payment.ticketPrice * payment.participantCount}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

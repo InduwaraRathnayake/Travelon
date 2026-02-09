@@ -72,7 +72,7 @@ interface AnalyticsData {
 // Add this improved date formatting function at the top level, outside the component
 
 function formatEventDate(
-  dateInput: { seconds: number; nanoseconds: number } | string | undefined
+  dateInput: { seconds: number; nanoseconds: number } | string | undefined,
 ): string {
   if (!dateInput) {
     return "Date not available";
@@ -115,7 +115,7 @@ function formatEventDate(
 
 export default function OrganizerDashboard() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -141,7 +141,7 @@ export default function OrganizerDashboard() {
         setError(null);
 
         const response = await fetch(
-          `/api/organizer/analytics?timeRange=${timeRange}`
+          `/api/organizer/analytics?timeRange=${timeRange}`,
         );
 
         if (!response.ok) {
@@ -217,14 +217,14 @@ export default function OrganizerDashboard() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
+    <div className="p-3 sm:p-4 lg:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">Analytics Dashboard</h1>
 
         <div className="relative">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="flex items-center px-4 py-2 border border-gray-300 rounded-md bg-white"
+            className="flex items-center px-3 sm:px-4 py-2 border border-gray-300 rounded-md bg-white text-sm sm:text-base w-full sm:w-auto"
           >
             <Filter className="h-4 w-4 mr-2" />
             {timeRange === "7days" && "Last 7 Days"}
@@ -280,26 +280,26 @@ export default function OrganizerDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Revenue Card */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex justify-between items-start mb-4">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start mb-3 sm:mb-4">
             <div>
-              <p className="text-gray-500 text-sm">Total Revenue</p>
-              <h3 className="text-2xl font-bold mt-1">
+              <p className="text-gray-500 text-xs sm:text-sm">Total Revenue</p>
+              <h3 className="text-xl sm:text-2xl font-bold mt-1">
                 {formatCurrency(analyticsData.totalRevenue)}
               </h3>
             </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <DollarSign className="h-6 w-6 text-blue-600" />
+            <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+              <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
             </div>
           </div>
-          <div className="flex items-center text-sm">
+          <div className="flex items-center text-xs sm:text-sm">
             <span
               className={`flex items-center ${
                 getPercentageChange(
                   analyticsData.totalRevenue,
-                  analyticsData.totalRevenue * 0.8
+                  analyticsData.totalRevenue * 0.8,
                 ) >= 0
                   ? "text-green-500"
                   : "text-red-500"
@@ -307,7 +307,7 @@ export default function OrganizerDashboard() {
             >
               {getPercentageChange(
                 analyticsData.totalRevenue,
-                analyticsData.totalRevenue * 0.8
+                analyticsData.totalRevenue * 0.8,
               ) >= 0 ? (
                 <ArrowUpRight className="h-4 w-4 mr-1" />
               ) : (
@@ -316,8 +316,8 @@ export default function OrganizerDashboard() {
               {Math.abs(
                 getPercentageChange(
                   analyticsData.totalRevenue,
-                  analyticsData.totalRevenue * 0.8
-                )
+                  analyticsData.totalRevenue * 0.8,
+                ),
               )}
               %
             </span>
@@ -343,7 +343,7 @@ export default function OrganizerDashboard() {
               className={`flex items-center ${
                 getPercentageChange(
                   analyticsData.totalTicketsSold,
-                  analyticsData.totalTicketsSold * 0.9
+                  analyticsData.totalTicketsSold * 0.9,
                 ) >= 0
                   ? "text-green-500"
                   : "text-red-500"
@@ -351,7 +351,7 @@ export default function OrganizerDashboard() {
             >
               {getPercentageChange(
                 analyticsData.totalTicketsSold,
-                analyticsData.totalTicketsSold * 0.9
+                analyticsData.totalTicketsSold * 0.9,
               ) >= 0 ? (
                 <ArrowUpRight className="h-4 w-4 mr-1" />
               ) : (
@@ -360,8 +360,8 @@ export default function OrganizerDashboard() {
               {Math.abs(
                 getPercentageChange(
                   analyticsData.totalTicketsSold,
-                  analyticsData.totalTicketsSold * 0.9
-                )
+                  analyticsData.totalTicketsSold * 0.9,
+                ),
               )}
               %
             </span>
@@ -419,7 +419,7 @@ export default function OrganizerDashboard() {
               className={`flex items-center ${
                 getPercentageChange(
                   analyticsData.avgTicketPrice,
-                  analyticsData.avgTicketPrice * 0.95
+                  analyticsData.avgTicketPrice * 0.95,
                 ) >= 0
                   ? "text-green-500"
                   : "text-red-500"
@@ -427,7 +427,7 @@ export default function OrganizerDashboard() {
             >
               {getPercentageChange(
                 analyticsData.avgTicketPrice,
-                analyticsData.avgTicketPrice * 0.95
+                analyticsData.avgTicketPrice * 0.95,
               ) >= 0 ? (
                 <ArrowUpRight className="h-4 w-4 mr-1" />
               ) : (
@@ -436,8 +436,8 @@ export default function OrganizerDashboard() {
               {Math.abs(
                 getPercentageChange(
                   analyticsData.avgTicketPrice,
-                  analyticsData.avgTicketPrice * 0.95
-                )
+                  analyticsData.avgTicketPrice * 0.95,
+                ),
               )}
               %
             </span>
@@ -447,17 +447,19 @@ export default function OrganizerDashboard() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Revenue Chart */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-semibold mb-6">Revenue Trends</h3>
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+            Revenue Trends
+          </h3>
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart
               data={analyticsData.revenueByMonth}
               margin={{
                 top: 5,
-                right: 30,
-                left: 20,
+                right: 10,
+                left: 10,
                 bottom: 5,
               }}
             >
@@ -481,15 +483,17 @@ export default function OrganizerDashboard() {
         </div>
 
         {/* Tickets Chart */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-semibold mb-6">Ticket Sales Trends</h3>
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+            Ticket Sales Trends
+          </h3>
+          <ResponsiveContainer width="100%" height={250}>
             <BarChart
               data={analyticsData.ticketsByMonth}
               margin={{
                 top: 5,
-                right: 30,
-                left: 20,
+                right: 10,
+                left: 10,
                 bottom: 5,
               }}
             >
@@ -511,29 +515,23 @@ export default function OrganizerDashboard() {
       </div>
 
       {/* Categories and Top Events */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Categories Distribution */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold mb-6">Events by Category</h3>
           <div className="flex justify-center">
-            <ResponsiveContainer width="100%" height={250}>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={analyticsData.eventsByCategory}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  outerRadius={80}
+                  outerRadius={60}
                   fill="#8884d8"
                   dataKey="count"
                   nameKey="category"
-                  label={({
-                    name,
-                    percent,
-                  }: {
-                    name: string;
-                    percent: number;
-                  }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={false}
                 >
                   {analyticsData.eventsByCategory.map((entry, index) => (
                     <Cell
@@ -547,6 +545,14 @@ export default function OrganizerDashboard() {
                     `${value} events`,
                     props.payload.category,
                   ]}
+                />
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
+                  wrapperStyle={{
+                    fontSize: "11px",
+                    paddingTop: "10px",
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -629,9 +635,13 @@ export default function OrganizerDashboard() {
       </div>
 
       {/* Recent Events */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold mb-6">Recent Events</h3>
-        <div className="overflow-x-auto">
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+          Recent Events
+        </h3>
+
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-50">
@@ -701,6 +711,57 @@ export default function OrganizerDashboard() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="block md:hidden space-y-4">
+          {analyticsData.recentEvents.map((event) => (
+            <div
+              key={event.id}
+              className="border border-gray-200 rounded-lg p-4"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center">
+                  {event.isBoosted && (
+                    <Zap className="h-4 w-4 text-blue-500 mr-2" />
+                  )}
+                  <Link
+                    href={`/organizer/events/view/${event.id}`}
+                    className="font-medium text-gray-900 hover:underline text-sm"
+                  >
+                    {event.title}
+                  </Link>
+                </div>
+              </div>
+              <div className="text-xs text-gray-500 mb-3">
+                {formatEventDate(event.date)} • {event.location}
+              </div>
+              <div className="grid grid-cols-3 gap-3 text-sm">
+                <div>
+                  <div className="text-xs text-gray-500">Price</div>
+                  <div>{formatCurrency(parseFloat(event.price) || 0)}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Sold</div>
+                  <div>
+                    {event.ticketsSold}/{event.maxParticipants}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Revenue</div>
+                  <div className="font-medium text-green-600">
+                    {formatCurrency(event.revenue)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {analyticsData.recentEvents.length === 0 && (
+            <div className="text-center text-sm text-gray-500 py-4">
+              No recent events found
+            </div>
+          )}
         </div>
       </div>
     </div>

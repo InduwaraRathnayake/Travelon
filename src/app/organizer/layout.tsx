@@ -27,11 +27,25 @@ export default function OrganizerLayout({
   const pathname = usePathname();
   const router = useRouter();
 
-  // Close sidebar on mobile when path changes
+  // Close sidebar on mobile when path changes and set initial state
   useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setSidebarCollapsed(true);
+      }
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Close sidebar when navigating on mobile
     if (window.innerWidth < 768) {
       setSidebarCollapsed(true);
     }
+
+    // Add resize listener
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [pathname]);
 
   const toggleSidebar = () => {
@@ -71,6 +85,14 @@ export default function OrganizerLayout({
         }}
       ></div>
 
+      {/* Mobile overlay */}
+      {!isSidebarCollapsed && (
+        <div
+          className="fixed inset-0 z-40 md:hidden backdrop-blur-xs"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
       {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-50 bg-black border-r border-gray-800 transform transition-all duration-300 ease-in-out ${
@@ -102,6 +124,29 @@ export default function OrganizerLayout({
                 Travelon
               </span>
             </Link>
+
+            {/* Mobile close button - only shown when sidebar is open on mobile */}
+            {!isSidebarCollapsed && (
+              <button
+                onClick={toggleSidebar}
+                className="block md:hidden p-2 rounded-md hover:bg-gray-800 transition-colors"
+                aria-label="Close sidebar"
+              >
+                <svg
+                  className="h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
 
             {/* Icon only when collapsed */}
             <div
@@ -317,10 +362,12 @@ export default function OrganizerLayout({
                 {/* Mobile menu button */}
                 <button
                   onClick={toggleSidebar}
-                  className="block md:hidden p-2 rounded-md hover:bg-gray-100"
-                  aria-label="Toggle mobile sidebar"
+                  className="block md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+                  aria-label={
+                    isSidebarCollapsed ? "Open sidebar" : "Close sidebar"
+                  }
                 >
-                  <Menu size={24} />
+                  <Menu size={24} className="text-gray-700" />
                 </button>
 
                 <button
