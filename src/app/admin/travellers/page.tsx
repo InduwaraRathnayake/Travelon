@@ -12,6 +12,10 @@ export default function TravelersPage() {
   // State to track which dropdown is open
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   
+  // State for search and filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Status");
+  
   // State for delete confirmation modal
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
     isOpen: boolean;
@@ -101,6 +105,20 @@ export default function TravelersPage() {
   // Get travelers array from data
   const travelers = data?.travelers || [];
 
+  // Filter travelers based on search and status
+  const filteredTravelers = travelers.filter(traveler => {
+    // Search filter
+    const matchesSearch = searchQuery === "" || 
+      `${traveler.firstName} ${traveler.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      traveler.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (traveler.phone && traveler.phone.includes(searchQuery));
+
+    // Status filter
+    const matchesStatus = statusFilter === "All Status" || traveler.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <div onClick={closeDropdown}>
       <div className="flex justify-between items-center mb-8">
@@ -123,19 +141,22 @@ export default function TravelersPage() {
           <input
             type="text"
             placeholder="Search customers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none">
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+          >
             <option>All Status</option>
             <option>Active</option>
             <option>New</option>
             <option>Inactive</option>
           </select>
-          <button className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-            Filter
-          </button>
         </div>
       </div>
 
@@ -168,13 +189,13 @@ export default function TravelersPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {travelers.length === 0 ? (
+            {filteredTravelers.length === 0 ? (
               <tr>
                 <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
                   No travelers found
                 </td>
               </tr>
-            ) : travelers.map((traveler) => (
+            ) : filteredTravelers.map((traveler) => (
               <tr key={traveler.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -291,7 +312,7 @@ export default function TravelersPage() {
         {/* Pagination */}
         <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200">
           <div className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">{travelers.length}</span> of <span className="font-medium">{data?.total || travelers.length}</span> results
+            Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredTravelers.length}</span> of <span className="font-medium">{travelers.length}</span> results
           </div>
           <div className="flex gap-1">
             <button className="bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 px-4 py-2 text-sm font-medium rounded-md">

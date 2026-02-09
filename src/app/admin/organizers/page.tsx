@@ -7,6 +7,11 @@ import { useOrganizers } from "@/hooks/useOrganizers";
 import OtpVerificationModal from "@/components/OtpVerificationModal";
 export default function OrganizersPage() {
   const { data, loading, error, updateOrganizerStatus, deleteOrganizer } = useOrganizers();
+  
+  // State for search and filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Status");
+  
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
     isOpen: boolean;
     organizerId: string | null;
@@ -51,6 +56,21 @@ export default function OrganizersPage() {
   }
 
   const organizers = data.organizers;
+
+  // Filter organizers based on search and status
+  const filteredOrganizers = organizers.filter(organizer => {
+    // Search filter
+    const matchesSearch = searchQuery === "" || 
+      `${organizer.firstName} ${organizer.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      organizer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (organizer.orgName && organizer.orgName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (organizer.username && organizer.username.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    // Status filter
+    const matchesStatus = statusFilter === "All Status" || organizer.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   // Toggle dropdown visibility
   const toggleDropdown = (organizerId: string) => {
@@ -167,19 +187,22 @@ export default function OrganizersPage() {
           <input
             type="text"
             placeholder="Search organizers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none">
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+          >
             <option>All Status</option>
             <option>Active</option>
             <option>Pending</option>
             <option>Inactive</option>
           </select>
-          <button className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-            Filter
-          </button>
         </div>
       </div>
 
@@ -206,7 +229,13 @@ export default function OrganizersPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {organizers.map((organizer) => (
+            {filteredOrganizers.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                  No organizers found
+                </td>
+              </tr>
+            ) : filteredOrganizers.map((organizer) => (
               <tr key={organizer.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => openOrganizerModal(organizer)}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -311,7 +340,7 @@ export default function OrganizersPage() {
         {/* Pagination */}
         <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200">
           <div className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">{organizers.length}</span> of <span className="font-medium">{organizers.length}</span> results
+            Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredOrganizers.length}</span> of <span className="font-medium">{organizers.length}</span> results
           </div>
           <div className="flex gap-1">
             <button className="bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 px-4 py-2 text-sm font-medium rounded-md">

@@ -9,6 +9,10 @@ import { useEvents } from "@/hooks/useEvents";
 export default function EventsPage() {
   const { data, loading, error, updateEventStatus, deleteEvent: deleteEventFromDB } = useEvents();
   
+  // State for search and filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Status");
+  
   // State for delete confirmation modal
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
     isOpen: boolean;
@@ -53,6 +57,21 @@ export default function EventsPage() {
   }
 
   const events = data.events;
+
+  // Filter events based on search and status
+  const filteredEvents = events.filter(event => {
+    // Search filter
+    const matchesSearch = searchQuery === "" || 
+      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.organizerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (event.location && event.location.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (event.category && event.category.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    // Status filter
+    const matchesStatus = statusFilter === "All Status" || event.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   // Toggle dropdown visibility
   const toggleDropdown = (eventId: string) => {
@@ -144,19 +163,22 @@ export default function EventsPage() {
           <input
             type="text"
             placeholder="Search events..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none">
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 outline-none"
+          >
             <option>All Status</option>
             <option>Active</option>
             <option>Upcoming</option>
             <option>Completed</option>
           </select>
-          <button className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-            Filter
-          </button>
         </div>
       </div>
 
@@ -186,7 +208,13 @@ export default function EventsPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {events.map((event) => (
+            {filteredEvents.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                  No events found
+                </td>
+              </tr>
+            ) : filteredEvents.map((event) => (
               <tr key={event.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => openEventModal(event)}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -297,7 +325,7 @@ export default function EventsPage() {
         {/* Pagination */}
         <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200">
           <div className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">{events.length}</span> of <span className="font-medium">{events.length}</span> results
+            Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredEvents.length}</span> of <span className="font-medium">{events.length}</span> results
           </div>
           <div className="flex gap-1">
             <button className="bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 px-4 py-2 text-sm font-medium rounded-md">
