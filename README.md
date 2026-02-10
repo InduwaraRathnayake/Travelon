@@ -4,9 +4,9 @@ Travelon is a comprehensive event management platform designed for small event o
 
 ## 🎬 Demo
 
-[![Travelon Demo Video](https://img.shields.io/badge/▶️-Watch%20Demo%20Video-red?style=for-the-badge&logo=youtube)](https://youtu.be/MDQUJOMnUTE)
+[![Travelon Demo Video](https://img.shields.io/badge/▶️-Watch%20Demo%20Video-red?style=for-the-badge)](https://dms.uom.lk/s/Qy8rXe6E2qXXMaY)
 
-**Watch the full demo:** [https://youtu.be/MDQUJOMnUTE](https://youtu.be/MDQUJOMnUTE)
+**Watch the full demo:** [https://dms.uom.lk/s/Qy8rXe6E2qXXMaY](https://dms.uom.lk/s/Qy8rXe6E2qXXMaY)
 
 ## 🚀 Features
 
